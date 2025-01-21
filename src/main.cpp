@@ -6,6 +6,7 @@
 #include "elf64.hpp"
 #include "args.hpp"
 #include "util.hpp"
+#include "header.hpp"
 
 int main(int argc, char** argv) {
 
@@ -17,6 +18,11 @@ int main(int argc, char** argv) {
 
 		OutputDispatcher dispatcher;
 		dispatcher.addGenerator(new Elf64 {args.file + ".o"});
+
+		if (args.c) {
+			dispatcher.addGenerator(new HeaderFile {args.file + ".h"});
+		}
+
 		dispatcher.addSymbol("test", bytes);
 		dispatcher.flush();
 

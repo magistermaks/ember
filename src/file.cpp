@@ -25,4 +25,6 @@ void SegmentedFile::flush() {
 		buffer->link();
 		buffer->write(stream);
 	}
+
+	stream.flush();
 }
