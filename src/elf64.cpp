@@ -146,9 +146,8 @@ void Elf64::createHeader() {
 
 void Elf64::createExtras() {
 
+	// identify file origin
 	std::string signature = "EMBER Resource File 1.0";
-
-	// ignored, but required
 	auto comment = appendBuffer(1);
 	comment->appendBytes(signature.data(), signature.size());
 	createSection(SHT_PROGBITS, SHF_MERGE | SHF_STRINGS, ".comment", comment);
@@ -216,7 +215,8 @@ void Elf64::createSymbol(const char* name, const std::vector<uint8_t>& data) {
 
 }
 
-Elf64::Elf64() {
+Elf64::Elf64(const std::string& path)
+: SegmentedFile(path) {
 
 	createHeader();
 
@@ -226,7 +226,6 @@ Elf64::Elf64() {
 
 	createSection(SHT_NULL, 0, "", nullptr);
 	createSection(SHT_STRTAB, 0, ".shstrtab", shstrtab);
-	createSection(SHT_PROGBITS, SHF_ALLOC | SHF_EXECINSTR, ".text", nullptr);
 
 	this->rodata = createSection(SHT_PROGBITS, SHF_ALLOC, ".rodata", appendBuffer(1));
 	this->strtab = createSection(SHT_STRTAB, 0, ".strtab", appendBuffer(1));

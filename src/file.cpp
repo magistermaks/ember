@@ -17,7 +17,10 @@ std::shared_ptr<ByteBuffer> SegmentedFile::getBuffer(int index) {
 	return buffers.at(index);
 }
 
-void SegmentedFile::write(std::ofstream& stream) {
+SegmentedFile::SegmentedFile(const std::string& path)
+: OutputGenerator(path) {}
+
+void SegmentedFile::flush() {
 	for (auto& buffer : buffers) {
 		buffer->link();
 		buffer->write(stream);

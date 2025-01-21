@@ -1,6 +1,7 @@
 #pragma once
 
 #include "file.hpp"
+#include "output.hpp"
 
 struct Elf64Section {
 
@@ -31,7 +32,7 @@ class Elf64 : public SegmentedFile {
 
 	public:
 
-		Elf64();
+		Elf64(const std::string& path);
 
 		void createSymbol(const char* name, const std::vector<uint8_t>& data);
 

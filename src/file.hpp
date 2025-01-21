@@ -5,8 +5,9 @@
 #include <vector>
 
 #include "buffer.hpp"
+#include "output.hpp"
 
-class SegmentedFile {
+class SegmentedFile : public OutputGenerator {
 
 	private:
 
@@ -19,6 +20,7 @@ class SegmentedFile {
 
 	public:
 
-		void write(std::ofstream& stream);
+		SegmentedFile(const std::string& path);
+		void flush();
 
 };
