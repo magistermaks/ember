@@ -1,7 +1,6 @@
 
 #include <stdio.h>
-
-extern const char test[13];
+#include "out.h"
 
 int main() {
 

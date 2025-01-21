@@ -7,6 +7,7 @@
 #include "args.hpp"
 #include "util.hpp"
 #include "header.hpp"
+#include "coff.hpp"
 
 int main(int argc, char** argv) {
 
@@ -18,6 +19,7 @@ int main(int argc, char** argv) {
 
 		OutputDispatcher dispatcher;
 		dispatcher.addGenerator(new Elf64 {args.file + ".o"});
+		dispatcher.addGenerator(new Coff {args.file + ".obj"});
 
 		if (args.c) {
 			dispatcher.addGenerator(new HeaderFile {args.file + ".h"});
