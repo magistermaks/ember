@@ -29,12 +29,13 @@ void Coff::createHeader() {
 
 long Coff::createSection(const std::string& name, uint32_t flags, std::shared_ptr<ByteBuffer> data) {
 
-	int limit = std::min(name.size(), 8ul);
+	int upper = 8;
+	int limit = std::min((int) name.size(), upper);
 	int index = section_count;
 
 	Coff_Sect& sect = sections->resize(sizeof(Coff_Sect)).as<Coff_Sect>(index);
 
-	memset(sect.name, 0, 8);
+	memset(sect.name, 0, upper);
 	memcpy(sect.name, name.c_str(), limit);
 
 	// make it so none of our sections actually exist in memory
