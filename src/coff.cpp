@@ -1,6 +1,7 @@
 
 #include "coff.hpp"
 #include <cstring>
+#include <algorithm>
 #include "struct/coff.hpp"
 
 static_assert(sizeof(Coff_Symb) == 18);
