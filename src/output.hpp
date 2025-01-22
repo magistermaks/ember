@@ -16,7 +16,7 @@ class OutputGenerator {
 		OutputGenerator(const std::string& path);
 
 		virtual ~OutputGenerator();
-		virtual void createSymbol(const char* name, const std::vector<uint8_t>& data) = 0;
+		virtual void createSymbol(const std::string& name, const std::vector<uint8_t>& data) = 0;
 		virtual void flush() = 0;
 
 };
@@ -30,7 +30,7 @@ class OutputDispatcher  {
 	public:
 
 		void addGenerator(OutputGenerator* generator);
-		void addSymbol(const char* name, const std::vector<uint8_t>& data);
+		void addSymbol(const std::string& name, const std::vector<uint8_t>& data);
 		void flush();
 
 };

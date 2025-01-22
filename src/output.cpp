@@ -22,7 +22,7 @@ void OutputDispatcher::addGenerator(OutputGenerator* generator) {
 	generators.emplace_back(generator);
 }
 
-void OutputDispatcher::addSymbol(const char* name, const std::vector<uint8_t>& data) {
+void OutputDispatcher::addSymbol(const std::string& name, const std::vector<uint8_t>& data) {
 	for (auto& generator : generators) generator->createSymbol(name, data);
 }
 

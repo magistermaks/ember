@@ -57,13 +57,17 @@ class ByteBuffer {
 		}
 
 		template <typename T>
-		void append(const T& value) {
+		void appendObject(const T& value) {
 			appendBytes(&value, sizeof(T));
 		}
 
 		template <typename T>
-		void append(const std::vector<T>& vector) {
+		void appendVector(const std::vector<T>& vector) {
 			appendBytes((void*) vector.data(), sizeof(T) * vector.size());
+		}
+
+		void appendString(const std::string& string) {
+			appendBytes((void*) string.c_str(), string.size() + 1);
 		}
 
 };

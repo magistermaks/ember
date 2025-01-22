@@ -1,46 +1,7 @@
 
 #include "coff.hpp"
 #include <cstring>
-
-#define IMAGE_FILE_MACHINE_UNKNOWN 0x00
-#define IMAGE_SYM_CLASS_EXTERNAL 2
-#define IMAGE_SYM_DTYPE_ARRAY 3
-#define IMAGE_SYM_TYPE_CHAR 2
-
-#pragma pack(push, 1)
-typedef struct {
-	uint16_t machine; // machine number
-	uint16_t seccnt;  // number of sections
-	uint32_t timdat;  // time stamp
-	uint32_t symoff;  // symbol table offset from file start
-	uint32_t symcnt;  // number of symbols
-	uint16_t opthdr;  // size of the "optional header"
-	uint16_t flags;   // flags
-} Coff_Head;
-
-typedef struct {
-	uint8_t  name[8]; // section name
-	uint32_t vsize;   // virtual memory size
-	uint32_t vaddr;   // virtual memory address
-	uint32_t size;    // section size in file
-	uint32_t offset;  // file offset to section data
-	uint32_t rloff;   // file offset to the relocation table for this section
-	uint32_t lnoff;   // File offset to the line number table for this section
-	uint16_t rlcnt;   // number of relocations
-	uint16_t lncnt;   // number of line numbers
-	uint32_t flags;   // flags
-} Coff_Sect;
-
-typedef struct {
-	uint8_t  name[8]; // symbol name
-	uint32_t value;   // offset in the section for 'EXTERNAL' symbols
-	uint16_t section; // section where the symbol is stored
-	uint8_t  base;    // base type
-	uint8_t  complex; // complex type
-	uint8_t  storage; // indicates what kind of definition a symbol represents
-	uint8_t  auxs;    // number of auxiliary symbols that follow
-} Coff_Symb;
-#pragma pack(pop)
+#include "struct/coff.hpp"
 
 static_assert(sizeof(Coff_Symb) == 18);
 
@@ -86,7 +47,7 @@ long Coff::createSection(const std::string& name, uint32_t flags, std::shared_pt
 	section_count ++;
 
 	sections->addLink([=] (ByteBuffer& buffer) {
-		Coff_Sect& sect = buffer.as<Coff_Sect>(index);
+		auto& sect = buffer.as<Coff_Sect>(index);
 		sect.offset = data->getStartOffset();
 		sect.size = data->size();
 	});
@@ -102,10 +63,11 @@ Coff::Coff(const std::string& path)
 	this->sections = appendBuffer(1);
 	this->rodata = appendBuffer(8);
 
-	this->rdata_index = createSection(".rdata", 0x400000, rodata);
+	const uint32_t flags = IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_ALIGN_1BYTES | IMAGE_SCN_ALIGN_2BYTES | IMAGE_SCN_MEM_READ;
+	this->rdata_index = createSection(".rdata", flags, rodata);
 
 	// keep symbols at the end
-	this->symbols = appendBuffer(1);
+	this->symbols = appendBuffer(4);
 
 	// ... and strings after symbols
 	this->strings = appendBuffer(1);
@@ -117,22 +79,30 @@ Coff::Coff(const std::string& path)
 
 }
 
-void Coff::createSymbol(const char* name, const std::vector<uint8_t>& data) {
+void Coff::createSymbol(const std::string& name, const std::vector<uint8_t>& data) {
 
-	int index = symbol_count;
-
+	const int index = symbol_count;
 	Coff_Symb& symb = symbols->resize(sizeof(Coff_Symb)).as<Coff_Symb>(index);
 
-	memcpy(symb.name, "_test", 6);
+	std::string mangled = '_' + name;
+
+	// technically we can do up to 8, but don't bother
+	if (mangled.size() <= 7) {
+		memcpy(symb.id.name, mangled.c_str(), mangled.size() + 1);
+	} else {
+		symb.id.zero = 0;
+		symb.id.offset = strings->size();
+		strings->appendString(mangled);
+	}
 
 	symb.value = rodata->size();
 	symb.section = rdata_index + 1;
 	symb.storage = IMAGE_SYM_CLASS_EXTERNAL;
-	symb.base = 0;//IMAGE_SYM_TYPE_CHAR;
+	symb.base = IMAGE_SYM_TYPE_CHAR;
 	symb.complex = IMAGE_SYM_DTYPE_ARRAY;
 	symb.auxs = 0;
 
 	symbol_count ++;
-	rodata->append(data);
+	rodata->appendVector(data);
 
 }

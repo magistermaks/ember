@@ -21,6 +21,6 @@ class SegmentedFile : public OutputGenerator {
 	public:
 
 		SegmentedFile(const std::string& path);
-		void flush();
+		void flush() override;
 
 };

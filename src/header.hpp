@@ -8,7 +8,7 @@ class HeaderFile : public OutputGenerator {
 
 		HeaderFile(const std::string& path);
 
-		void createSymbol(const char* name, const std::vector<uint8_t>& data);
-		void flush();
+		void createSymbol(const std::string& name, const std::vector<uint8_t>& data) override;
+		void flush() override;
 
 };

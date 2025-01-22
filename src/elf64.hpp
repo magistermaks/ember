@@ -34,6 +34,6 @@ class Elf64 : public SegmentedFile {
 
 		Elf64(const std::string& path);
 
-		void createSymbol(const char* name, const std::vector<uint8_t>& data);
+		void createSymbol(const std::string& name, const std::vector<uint8_t>& data) override;
 
 };
