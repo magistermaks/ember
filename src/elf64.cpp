@@ -7,8 +7,8 @@
 void Elf64::createHeader() {
 
 	auto buffer = appendBuffer(1);
-	Elf64_Ehdr* ehdr = &buffer->resize(sizeof(Elf64_Ehdr)).as<Elf64_Ehdr>();
-	Elf64_Ident* ident = &ehdr->ident;
+	Elf64_Ehdr ehdr;
+	Elf64_Ident* ident = &ehdr.ident;
 
 	// magic bytes
 	ident->magic[0] = 0x7f;
@@ -25,19 +25,19 @@ void Elf64::createHeader() {
 	std::memset(ident->pad, 0, 7);
 
 	// now on with the rest of the header
-	ehdr->type = ET_REL; // relocatable file
-	ehdr->machine = EM_X86_64; // not sure if this is valid but we don't care about the machine arch here
-	ehdr->version = EV_CURRENT;
-	ehdr->entry = 0; // this file won't be executable
-	ehdr->phoff = 0; // no program header table
-	ehdr->shoff = sizeof(Elf64_Ehdr);
-	ehdr->flags = 0; // no flags
-	ehdr->ehsize = sizeof(Elf64_Ehdr); // header size
-	ehdr->phentsize = 0; // size of one entry in program header table FIXME?
-	ehdr->phnum = 0; // number of entries in program header table
-	ehdr->shentsize = sizeof(Elf64_Shdr); // size of section header
-	ehdr->shnum = 0; // number of sections in the file
-	ehdr->shstrndx = 0; // index of the string table in section table
+	ehdr.type = ET_REL; // relocatable file
+	ehdr.machine = EM_X86_64; // not sure if this is valid but we don't care about the machine arch here
+	ehdr.version = EV_CURRENT;
+	ehdr.entry = 0; // this file won't be executable
+	ehdr.phoff = 0; // no program header table
+	ehdr.shoff = sizeof(Elf64_Ehdr);
+	ehdr.flags = 0; // no flags
+	ehdr.ehsize = sizeof(Elf64_Ehdr); // header size
+	ehdr.phentsize = 0; // size of one entry in program header table
+	ehdr.phnum = 0; // number of entries in program header table
+	ehdr.shentsize = sizeof(Elf64_Shdr); // size of section header
+	ehdr.shnum = 0; // number of sections in the file
+	ehdr.shstrndx = 0; // index of the string table in section table
 
 	buffer->addLink([&] (ByteBuffer& buffer) {
 		Elf64_Ehdr& ehdr = buffer.as<Elf64_Ehdr>();
@@ -45,6 +45,8 @@ void Elf64::createHeader() {
 		ehdr.shnum = sections.size();
 		ehdr.shstrndx = SECTION_SHSTRTAB;
 	});
+
+	buffer->appendObject(ehdr);
 
 }
 

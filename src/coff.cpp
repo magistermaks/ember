@@ -8,12 +8,12 @@ static_assert(sizeof(Coff_Symb) == 18);
 void Coff::createHeader() {
 
 	auto buffer = appendBuffer(1);
-	Coff_Head* head = &buffer->resize(sizeof(Coff_Head)).as<Coff_Head>();
+	Coff_Head head {};
 
-	head->machine = 0x14c;
-	head->timdat = (uint32_t) time(nullptr); // idk
-	head->opthdr = 0; // object files don't have the optional header
-	head->flags = 0;
+	head.machine = 0x14c;
+	head.timdat = (uint32_t) time(nullptr); // idk
+	head.opthdr = 0; // object files don't have the optional header
+	head.flags = 0;
 
 	buffer->addLink([this] (ByteBuffer& buffer) {
 		Coff_Head* head = &buffer.as<Coff_Head>();
@@ -21,6 +21,8 @@ void Coff::createHeader() {
 		head->symcnt = symbol_count;
 		head->symoff = symbols->getStartOffset();
 	});
+
+	buffer->appendObject(head);
 
 }
 
