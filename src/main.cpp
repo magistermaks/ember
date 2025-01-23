@@ -18,11 +18,17 @@ int main(int argc, char** argv) {
 		std::vector<uint8_t> bytes = getBytes(getInputFile("hello.txt"));
 
 		OutputDispatcher dispatcher;
-		dispatcher.addGenerator(new Elf64 {args.file + ".o"});
-		dispatcher.addGenerator(new Coff {args.file + ".obj"});
 
-		if (args.c) {
-			dispatcher.addGenerator(new HeaderFile {args.file + ".h"});
+		if (args.elf64.enabled) {
+			dispatcher.addGenerator(new Elf64 {args.elf64.value});
+		}
+
+		if (args.coff32.enabled) {
+			dispatcher.addGenerator(new Coff {args.coff32.value});
+		}
+
+		if (args.header.enabled) {
+			dispatcher.addGenerator(new HeaderFile {args.header.value});
 		}
 
 		dispatcher.addSymbol("test", bytes);

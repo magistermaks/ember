@@ -2,27 +2,41 @@
 
 #include <string>
 
-enum struct InputFlag {
-	NONE,
-	OUTPUT
-};
-
 class Args {
 
 	private:
 
-		InputFlag flag = InputFlag::NONE;
+		enum InputFlag {
+			NONE,
+			ELF_64_PATH,
+			COFF_32_PATH,
+			HEADER_PATH,
+		};
+
+		struct StringFlag {
+			bool enabled;
+			std::string value;
+
+			StringFlag();
+			void setValue(const std::string& path);
+		};
+
+	private:
+
+		InputFlag expect = InputFlag::NONE;
 
 		static void raiseError(const std::string& message);
-		void nextFlag(char flg);
+		void nextFlag(std::string flg);
+		bool accept(InputFlag flag);
 
 	public:
 
 		static Args load(int argc, char** argv);
 
-		std::string file = "out";
+		StringFlag header;
+		StringFlag elf64;
+		StringFlag coff32;
 
-		bool h = false; // help
-		bool c = false; // .c header
+		bool help = false;
 
 };
