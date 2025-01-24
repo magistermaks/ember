@@ -19,7 +19,7 @@ jobs:
         run: cmake --build ${{ github.workspace }}/build --target ember
 
       - name: CMake Tests
-        run: ctest --build-dir ${{ github.workspace }}/build --output-on-failure
+        run: cd ${{ github.workspace }}/build && ctest --output-on-failure
 
   build-windows:
     runs-on: windows-latest
@@ -33,4 +33,4 @@ jobs:
         run: cmake --build ${{ github.workspace }}/build --target ember
 
       - name: CMake Tests
-        run: ctest --build-dir ${{ github.workspace }}/build --output-on-failure
+        run: cd ${{ github.workspace }}/build && ctest --output-on-failure
