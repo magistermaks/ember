@@ -33,4 +33,4 @@ jobs:
         run: cmake --build ${{ github.workspace }}/build
 
       - name: CMake Tests
-        run: cd ${{ github.workspace }}/build && ctest --output-on-failure
+        run: cd ${{ github.workspace }}/build && ctest -C Debug --output-on-failure
