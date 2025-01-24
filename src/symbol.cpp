@@ -12,7 +12,7 @@ void Symbol::setFile(const std::string& file) {
 	this->file = file;
 
 	std::filesystem::path path {file};
-	std::string stem = path.stem();
+	std::string stem = path.stem().generic_string();
 
 	// construct *some* default symbol name
 	if (name.empty()) {

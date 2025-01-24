@@ -1,4 +1,4 @@
-name: Build
+name: Build & Test
 
 on:
   push:
@@ -16,7 +16,10 @@ jobs:
         run: cmake -B ${{ github.workspace }}/build -S ${{ github.workspace }}
 
       - name: CMake Build
-        run: cmake --build ${{ github.workspace }}/build
+        run: cmake --build ${{ github.workspace }}/build --target ember
+
+      - name: CMake Tests
+        run: ctest --build-dir ${{ github.workspace }}/build --output-on-failure
 
   build-windows:
     runs-on: windows-latest
@@ -27,4 +30,7 @@ jobs:
         run: cmake -B ${{ github.workspace }}/build -S ${{ github.workspace }}
 
       - name: CMake Build
-        run: cmake --build ${{ github.workspace }}/build
+        run: cmake --build ${{ github.workspace }}/build --target ember
+
+      - name: CMake Tests
+        run: ctest --build-dir ${{ github.workspace }}/build --output-on-failure
