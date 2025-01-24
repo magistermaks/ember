@@ -49,10 +49,11 @@ function(add_ember target_name)
 
 	# Construct ember output filenames
 	set(generated_object "${ARG_OUTPUT}.${object_extension}")
-	set(generated_header "${ARG_OUTPUT}.h")
 
-	if(HEADER)
-		set(ADDITIONAL_FLAGS -h "${generated_header}")
+	if(ARG_HEADER)
+		set(generated_header "${ARG_OUTPUT}.h")
+		set(ADDITIONAL_FLAGS -H "${generated_header}")
+		set("${target_name}_header" "${generated_header}" PARENT_SCOPE)
 	endif()
 
 	set(dependencies)
@@ -77,7 +78,8 @@ function(add_ember target_name)
 
 	# Invoke ember to generate resource file
 	add_custom_command(
-			OUTPUT ${generated_object}
+			PRE_BUILD
+			OUTPUT ${generated_object} ${generated_header}
 			COMMAND ember ${ADDITIONAL_FLAGS} --store ${asset_store} ${object_flag} "${generated_object}" ${ARG_ARGS}
 			DEPENDS ember ${dependencies}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -85,7 +87,6 @@ function(add_ember target_name)
 	)
 
 	# Create a library with our custom objects
-#	add_library(${target_name} OBJECT IMPORTED ${generated_object})
 	add_library(${target_name} OBJECT IMPORTED GLOBAL)
 
 	# Some extra configuration needed
