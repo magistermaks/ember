@@ -16,7 +16,7 @@ jobs:
         run: cmake -B ${{ github.workspace }}/build -S ${{ github.workspace }}
 
       - name: CMake Build
-        run: cmake --build ${{ github.workspace }}/build --target ember
+        run: cmake --build ${{ github.workspace }}/build
 
       - name: CMake Tests
         run: cd ${{ github.workspace }}/build && ctest --output-on-failure
@@ -30,7 +30,7 @@ jobs:
         run: cmake -B ${{ github.workspace }}/build -S ${{ github.workspace }}
 
       - name: CMake Build
-        run: cmake --build ${{ github.workspace }}/build --target ember
+        run: cmake --build ${{ github.workspace }}/build
 
       - name: CMake Tests
         run: cd ${{ github.workspace }}/build && ctest --output-on-failure
