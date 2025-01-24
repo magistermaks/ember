@@ -11,7 +11,10 @@ void Coff::createHeader() {
 	auto buffer = appendBuffer(1);
 	Coff_Head head {};
 
-	head.machine = 0x14c;
+	// COFF files with machine=0 are not recognized on linux but work on windows
+	// albeit with a warning if this object file is the first one given to the linker
+	head.machine = 0;
+
 	head.timdat = (uint32_t) time(nullptr); // idk
 	head.opthdr = 0; // object files don't have the optional header
 	head.flags = 0;
