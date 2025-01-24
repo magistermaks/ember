@@ -91,7 +91,8 @@ void Coff::createSymbol(const Symbol& symbol) {
 	const int index = symbol_count;
 	Coff_Symb& symb = symbols->resize(sizeof(Coff_Symb)).as<Coff_Symb>(index);
 
-	std::string mangled = '_' + symbol.name;
+	// don't mangle the name, more research is necessary
+	std::string mangled = symbol.name;
 
 	// technically we can do up to 8, but don't bother
 	if (mangled.size() <= 7) {
