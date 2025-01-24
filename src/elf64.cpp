@@ -100,7 +100,7 @@ Elf64Section Elf64::createSection(int type, int flags, const char* name, std::sh
 
 }
 
-void Elf64::createSymbol(const std::string& name, const std::vector<uint8_t>& data) {
+void Elf64::createSymbol(const Symbol& symbol) {
 
 	int index = symtab.buffer->size() / sizeof(Elf64_Sym);
 	auto& sym = symtab.buffer->resize(sizeof(Elf64_Sym)).as<Elf64_Sym>(index);
@@ -108,16 +108,16 @@ void Elf64::createSymbol(const std::string& name, const std::vector<uint8_t>& da
 	sym.st_shndx = rodata.index;
 	sym.st_name = strtab.buffer->size();
 	sym.st_value = rodata.buffer->size();
-	sym.st_size = data.size();
+	sym.st_size = symbol.data.size();
 
 	sym.st_info = 0x11; // STT_OBJECT (1<<4), STB_GLOBAL (1)
 	sym.st_other = 0; // STV_DEFAULT
 
 	// copy name into symbol name buffer
-	strtab.buffer->appendBytes(name.c_str(), name.size() + 1);
+	strtab.buffer->appendBytes(symbol.name.c_str(), symbol.name.size() + 1);
 
 	// copy data into rodata buffer
-	rodata.buffer->appendVector(data);
+	rodata.buffer->appendVector(symbol.data);
 
 }
 

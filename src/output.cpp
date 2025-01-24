@@ -1,6 +1,7 @@
 
 #include "output.hpp"
 #include "util.hpp"
+#include "symbol.hpp"
 
 /*
  * OutputGenerator
@@ -22,8 +23,8 @@ void OutputDispatcher::addGenerator(OutputGenerator* generator) {
 	generators.emplace_back(generator);
 }
 
-void OutputDispatcher::addSymbol(const std::string& name, const std::vector<uint8_t>& data) {
-	for (auto& generator : generators) generator->createSymbol(name, data);
+void OutputDispatcher::addSymbol(const Symbol& symbol) {
+	for (auto& generator : generators) generator->createSymbol(symbol);
 }
 
 void OutputDispatcher::flush() {

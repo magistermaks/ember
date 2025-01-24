@@ -83,12 +83,12 @@ Coff::Coff(const std::string& path)
 
 }
 
-void Coff::createSymbol(const std::string& name, const std::vector<uint8_t>& data) {
+void Coff::createSymbol(const Symbol& symbol) {
 
 	const int index = symbol_count;
 	Coff_Symb& symb = symbols->resize(sizeof(Coff_Symb)).as<Coff_Symb>(index);
 
-	std::string mangled = '_' + name;
+	std::string mangled = '_' + symbol.name;
 
 	// technically we can do up to 8, but don't bother
 	if (mangled.size() <= 7) {
@@ -107,6 +107,6 @@ void Coff::createSymbol(const std::string& name, const std::vector<uint8_t>& dat
 	symb.auxs = 0;
 
 	symbol_count ++;
-	rodata->appendVector(data);
+	rodata->appendVector(symbol.data);
 
 }

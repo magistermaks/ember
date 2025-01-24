@@ -1,22 +1,23 @@
 
 #include "util.hpp"
 #include <stdexcept>
+#include <filesystem>
 
-std::ifstream getInputFile(const std::string& path) {
+std::ifstream getInputFile(const std::filesystem::path& path) {
 	std::ifstream input {path, std::ios::binary};
 
 	if (!input.is_open()) {
-		throw std::runtime_error {"Failed to open input file '" + path + "'"};
+		throw std::runtime_error {"Failed to open input file '" + path.generic_string() + "'!"};
 	}
 
 	return input;
 }
 
-std::ofstream getOutputFile(const std::string& path) {
+std::ofstream getOutputFile(const std::filesystem::path& path) {
 	std::ofstream output {path, std::ios::binary};
 
 	if (!output.is_open()) {
-		throw std::runtime_error {"Failed to open output file '" + path + "'"};
+		throw std::runtime_error {"Failed to open output file '" + path.generic_string() + "'!"};
 	}
 
 	return output;

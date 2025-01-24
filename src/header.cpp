@@ -10,9 +10,9 @@ HeaderFile::HeaderFile(const std::string& path)
 	stream << "#pragma once\n\n";
 }
 
-void HeaderFile::createSymbol(const std::string& name, const std::vector<uint8_t>& data) {
-	stream << "// Contents of file '/" << name << "'\n";
-	stream << "extern const char " << name << "[" << data.size() << "];\n\n";
+void HeaderFile::createSymbol(const Symbol& symbol) {
+	stream << "// Contents of file '" << symbol.file << "'\n";
+	stream << "extern const char " << symbol.name << "[" << symbol.data.size() << "];\n\n";
 }
 
 void HeaderFile::flush() {

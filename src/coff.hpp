@@ -22,6 +22,6 @@ class Coff : public SegmentedFile {
 
 		Coff(const std::string& path);
 
-		void createSymbol(const std::string& name, const std::vector<uint8_t>& data) override;
+		void createSymbol(const Symbol& symbol) override;
 
 };

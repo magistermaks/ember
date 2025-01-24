@@ -14,9 +14,6 @@ int main(int argc, char** argv) {
 	try {
 
 		Args args = Args::load(argc, argv);
-
-		std::vector<uint8_t> bytes = getBytes(getInputFile("hello.txt"));
-
 		OutputDispatcher dispatcher;
 
 		if (args.elf64.enabled) {
@@ -31,7 +28,10 @@ int main(int argc, char** argv) {
 			dispatcher.addGenerator(new HeaderFile {args.header.value});
 		}
 
-		dispatcher.addSymbol("test", bytes);
+		for (Symbol& symbol : args.symbols) {
+			dispatcher.addSymbol(symbol);
+		}
+
 		dispatcher.flush();
 
 	} catch (std::runtime_error& error) {
