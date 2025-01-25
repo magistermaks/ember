@@ -39,7 +39,7 @@ class ByteBuffer {
 	public:
 
 		template <typename T>
-		T& as(int index = 0) {
+		T& as(int index = 0, bool check_alignment = true) {
 			int extend = index + 1;
 
 			if (sizeof(T) * extend > bytes.size()) {
@@ -48,7 +48,7 @@ class ByteBuffer {
 				};
 			}
 
-			if (bytes.size() % sizeof(T) != 0) {
+			if (check_alignment && (bytes.size() % sizeof(T) != 0)) {
 				throw std::runtime_error {
 					"Invalid byte buffer alignment, expected multiple of " + std::to_string(sizeof(T)) + " bytes, but got " + std::to_string(bytes.size()) + "!"
 				};

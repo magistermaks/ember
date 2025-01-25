@@ -2,3 +2,5 @@
 *.o
 *.out
 *.bin
+out/
+.vs/

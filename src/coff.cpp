@@ -81,7 +81,7 @@ Coff::Coff(const std::string& path)
 	this->strings->resize(4);
 
 	this->strings->addLink([] (ByteBuffer& buffer) {
-		buffer.as<uint32_t>(0) = buffer.size();
+		buffer.as<uint32_t>(0, false) = buffer.size();
 	});
 
 }
