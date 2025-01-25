@@ -7,7 +7,10 @@ to easily use ember in their build process.
 Overview of the ember assisted compilation pipeline, the use of GCC is purely exemplary, in fact, Ember support 
 both Linux and Windows specific compilers and linkers.
 
-![Compilation Pipeline](.github/ember-pipeline.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./.github/ember-pipeline-dark.png">
+  <img alt="Compilation Pipeline" src="./.github/ember-pipeline-light.png">
+</picture>
 
 ### CMake Usage Example
 ```cmake
