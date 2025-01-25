@@ -5,7 +5,8 @@
 #include <filesystem>
 
 void Symbol::print() {
-	std::cout << "symbol '" << name << "' from '" << file << "'\n";
+	std::string limited = (this->limit != -1) ? std::to_string(this->limit) : "unlimited";
+	std::cout << "symbol '" << name << "' from '" << file << "' [" << limited << "]\n";
 }
 
 void Symbol::setFile(const std::string& file) {
@@ -36,9 +37,10 @@ void Symbol::setName(const std::string& name) {
 }
 
 void Symbol::resolve(const std::string& store) {
+	print();
 
 	std::filesystem::path path {this->file};
 	std::filesystem::path parent {store};
 
-	this->data = getBytes(getInputFile(parent / path));
+	this->data = getBytes(getInputFile(parent / path), 0, limit, -1);
 }

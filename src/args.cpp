@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <cstdio>
 #include <cstring>
+#include <cstdlib>
 
 /*
  * Args::StringFlag
@@ -37,6 +38,44 @@ Symbol& Args::getCurrentSymbol() {
 	}
 
 	return symbols.back();
+}
+
+int64_t Args::parseAsNumber(const std::string& number) {
+
+	int base = 10;
+	const char* string = number.c_str();
+
+	if ((number.size() >= 2) && (number[0] == '0')) {
+		if (number[1] == 'x') {
+			base = 16;
+			string += 2;
+			goto parse;
+		}
+
+		if (number[1] == 'o') {
+			base = 8;
+			string += 2;
+			goto parse;
+		}
+
+		if (number[1] == 'b') {
+			base = 2;
+			string += 2;
+			goto parse;
+		}
+	}
+
+	parse:
+
+	char* end = nullptr;
+	int64_t value = strtoll(string, &end, base);
+
+	if (end != number.c_str() + number.size()) {
+		throw std::runtime_error {"Failed to fully parse '" + number + "' as a number!"};
+	}
+
+	return value;
+
 }
 
 void Args::nextOptionFlag(const std::string& flg) {
@@ -90,6 +129,11 @@ void Args::nextSymbolFlag(const std::string& flg) {
 
 	if (flg == "-n" || flg == "--name") {
 		this->expect = InputFlag::SYMBOL_NAME;
+		return;
+	}
+
+	if (flg == "-l" || flg == "--limit") {
+		this->expect = InputFlag::SYMBOL_LIMIT;
 		return;
 	}
 
@@ -153,6 +197,11 @@ void Args::parseArgument(const char* arg) {
 
 	if (accept(InputFlag::SYMBOL_NAME)) {
 		getCurrentSymbol().setName(arg);
+		return;
+	}
+
+	if (accept(InputFlag::SYMBOL_LIMIT)) {
+		getCurrentSymbol().limit = parseAsNumber(arg);
 		return;
 	}
 

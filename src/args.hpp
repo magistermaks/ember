@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <cinttypes>
 #include "symbol.hpp"
 
 class Args {
@@ -22,6 +23,7 @@ class Args {
 
 			SYMBOL_FILE,
 			SYMBOL_NAME,
+			SYMBOL_LIMIT,
 		};
 
 		struct StringFlag {
@@ -36,6 +38,7 @@ class Args {
 		void beginSymbolDefinition();
 		Symbol& getCurrentSymbol();
 
+		int64_t parseAsNumber(const std::string& number);
 		void nextOptionFlag(const std::string& flg);
 		void nextSymbolFlag(const std::string& flg);
 

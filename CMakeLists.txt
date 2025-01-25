@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(EMBER)
 
+option(EMBER_ENABLE_TESTS "Enable tests for EMBER" ON)
+
 enable_testing()
 
 file(GLOB_RECURSE EMBER_SOURCES "src/*.cpp")
@@ -98,7 +100,7 @@ function(add_ember target_name)
 endfunction()
 
 # Include test projects
-if(EXISTS "${CMAKE_SOURCE_DIR}/test")
+if(EMBER_ENABLE_TESTS)
 	FILE(GLOB tests RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/test ${CMAKE_CURRENT_SOURCE_DIR}/test/*)
 
 	foreach(test ${tests})

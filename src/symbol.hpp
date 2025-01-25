@@ -13,6 +13,8 @@ struct Symbol {
 		std::string file;
 		std::string name;
 
+		uint64_t limit = -1;
+
 		void print();
 
 	public:
