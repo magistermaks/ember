@@ -6,7 +6,7 @@
 
 void Symbol::print() {
 	std::string limited = (this->limit != -1) ? std::to_string(this->limit) : "unlimited";
-	std::cout << "symbol '" << name << "' from '" << file << "' [" << limited << "]\n";
+	std::cout << "Embedding symbol '" << name << "' from '" << file << "' [" << limited << "]\n";
 }
 
 void Symbol::setFile(const std::string& file) {

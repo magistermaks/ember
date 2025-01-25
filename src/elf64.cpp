@@ -53,9 +53,8 @@ void Elf64::createHeader() {
 void Elf64::createExtras() {
 
 	// identify file origin
-	std::string signature = "EMBER Resource File 1.0";
 	auto comment = appendBuffer(1);
-	comment->appendBytes(signature.data(), signature.size());
+	comment->appendString("EMBER Resource File 1.0");
 	createSection(SHT_PROGBITS, SHF_MERGE | SHF_STRINGS, ".comment", comment);
 
 }
