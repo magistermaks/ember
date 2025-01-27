@@ -17,15 +17,15 @@ int main(int argc, char** argv) {
 		OutputDispatcher dispatcher;
 
 		if (args.elf64.enabled) {
-			dispatcher.addGenerator(new Elf64 {args.elf64.value});
+			dispatcher.addGenerator(new Elf64 {args.elf64.value, args.writeable});
 		}
 
 		if (args.coff32.enabled) {
-			dispatcher.addGenerator(new Coff {args.coff32.value});
+			dispatcher.addGenerator(new Coff {args.coff32.value, args.writeable});
 		}
 
 		if (args.header.enabled) {
-			dispatcher.addGenerator(new HeaderFile {args.header.value});
+			dispatcher.addGenerator(new HeaderFile {args.header.value, args.writeable});
 		}
 
 		for (Symbol& symbol : args.symbols) {

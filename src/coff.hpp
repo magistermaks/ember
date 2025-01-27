@@ -20,7 +20,7 @@ class Coff : public SegmentedFile {
 
 	public:
 
-		Coff(const std::string& path);
+		Coff(const std::string& path, bool writeable);
 
 		void createSymbol(const Symbol& symbol) override;
 

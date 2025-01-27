@@ -32,7 +32,7 @@ class Elf64 : public SegmentedFile {
 
 	public:
 
-		Elf64(const std::string& path);
+		Elf64(const std::string& path, bool writeable);
 
 		void createSymbol(const Symbol& symbol) override;
 

@@ -120,7 +120,7 @@ void Elf64::createSymbol(const Symbol& symbol) {
 
 }
 
-Elf64::Elf64(const std::string& path)
+Elf64::Elf64(const std::string& path, bool writeable)
 : SegmentedFile(path) {
 
 	createHeader();
@@ -132,7 +132,10 @@ Elf64::Elf64(const std::string& path)
 	createSection(SHT_NULL, 0, "", nullptr);
 	createSection(SHT_STRTAB, 0, ".shstrtab", shstrtab);
 
-	this->rodata = createSection(SHT_PROGBITS, SHF_ALLOC, ".rodata", appendBuffer(1));
+	const int flags = SHF_ALLOC | (writeable ? SHF_WRITE : 0);
+	const char* name = writeable ? ".data" : ".rodata";
+
+	this->rodata = createSection(SHT_PROGBITS, flags, name, appendBuffer(1));
 	this->strtab = createSection(SHT_STRTAB, 0, ".strtab", appendBuffer(1));
 	this->symtab = createSection(SHT_SYMTAB, 0, ".symtab", appendBuffer(8), strtab.index);
 

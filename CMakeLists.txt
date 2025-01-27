@@ -30,7 +30,7 @@ endif()
 # Function to be used by library users
 function(add_ember target_name)
 	cmake_parse_arguments(PARSE_ARGV 0 ARG
-			"HEADER" "OUTPUT" "ARGS"
+			"HEADER;MUTABLE" "OUTPUT" "ARGS"
 	)
 
 	set(asset_store "${CMAKE_CURRENT_LIST_DIR}")
@@ -51,11 +51,18 @@ function(add_ember target_name)
 
 	# Construct ember output filenames
 	set(generated_object "${ARG_OUTPUT}.${object_extension}")
+	set(additional_flags)
 
 	if(ARG_HEADER)
 		set(generated_header "${ARG_OUTPUT}.h")
-		set(ADDITIONAL_FLAGS -H "${generated_header}")
+		list(APPEND additional_flags -H "${generated_header}")
+
+
 		set("${target_name}_header" "${generated_header}" PARENT_SCOPE)
+	endif()
+
+	if (ARG_MUTABLE)
+		list(APPEND additional_flags -m)
 	endif()
 
 	set(dependencies)
@@ -82,7 +89,7 @@ function(add_ember target_name)
 	add_custom_command(
 			PRE_BUILD
 			OUTPUT ${generated_object} ${generated_header}
-			COMMAND ember ${ADDITIONAL_FLAGS} --store ${asset_store} ${object_flag} "${generated_object}" ${ARG_ARGS}
+			COMMAND ember ${additional_flags} --store ${asset_store} ${object_flag} "${generated_object}" ${ARG_ARGS}
 			DEPENDS ember ${dependencies}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 			COMMENT "Generating asset file ${generated_object}"

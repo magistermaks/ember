@@ -112,7 +112,6 @@ void Args::nextOptionFlag(const std::string& flg) {
 
 	if (flg == "-m" || flg == "--mutable") {
 		writeable = true;
-		throw std::runtime_error {"--mutable is not implemented yet!"};
 		return;
 	}
 
@@ -235,7 +234,7 @@ Args Args::load(int argc, char** argv) {
 	}
 
 	if (args.help) {
-		printf("Usage: ember [options] [-f|--file <path> [-n|--name <name>]]...\n");
+		printf("Usage: ember [options] [-f|--file <path> [-n|--name <name>] [-l|--limit <size>]]...\n");
 		printf("Create linkable resource files\n\n");
 
 		printf("Valid option flags:\n");
@@ -253,6 +252,7 @@ Args Args::load(int argc, char** argv) {
 
 		printf("Valid symbol flags:\n");
 		printf("  -n, --name    <name>  Valid C identifier of the symbol\n");
+		printf("  -l, --limit   <size>  Limit the number of bytes read from file\n");
 		exit(0);
 	}
 

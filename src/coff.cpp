@@ -62,7 +62,7 @@ long Coff::createSection(const std::string& name, uint32_t flags, std::shared_pt
 	return index;
 }
 
-Coff::Coff(const std::string& path)
+Coff::Coff(const std::string& path, bool writeable)
 : SegmentedFile(path) {
 
 	createHeader();
@@ -70,8 +70,11 @@ Coff::Coff(const std::string& path)
 	this->sections = appendBuffer(1);
 	this->rodata = appendBuffer(8);
 
-	const uint32_t flags = IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_ALIGN_1BYTES | IMAGE_SCN_ALIGN_2BYTES | IMAGE_SCN_MEM_READ;
-	this->rdata_index = createSection(".rdata", flags, rodata);
+	// compose section flags
+	const uint32_t base = IMAGE_SCN_CNT_INITIALIZED_DATA | IMAGE_SCN_ALIGN_1BYTES | IMAGE_SCN_ALIGN_2BYTES | IMAGE_SCN_MEM_READ;
+	const uint32_t flags = base | (writeable ? IMAGE_SCN_MEM_WRITE : 0);
+
+	this->rdata_index = createSection(writeable ? ".data" : ".rdata", flags, rodata);
 
 	// keep symbols at the end
 	this->symbols = appendBuffer(4);
