@@ -252,8 +252,6 @@ bool Args::accept(InputFlag flag) {
 
 void Args::parseArgument(const char* arg) {
 
-	std::cout << "Parsing argument: " << arg << "\n";
-
 	if (accept(InputFlag::ELF_64_PATH)) {
 		elf64.setValue(arg);
 		return;

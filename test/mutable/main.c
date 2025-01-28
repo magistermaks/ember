@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #endif
 
-int check_writeable(void *p, int expect) {
+int check_writeable(void* p, int expect) {
 #ifdef __linux__
 	int fd = open("/dev/zero", O_RDONLY);
 	int writeable;

@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #endif
 
-int check_writeable(void *p, int expect) {
+int check_writeable(void* p, int expect) {
 #ifdef __linux__
 	int fd = open("/dev/zero", O_RDONLY);
 	int writeable;
@@ -29,7 +29,7 @@ int check_writeable(void *p, int expect) {
 // This test always passes on windows
 int main() {
 
-	if (check_writeable(mdat, 0)) {
+	if (check_writeable((void*) mdat, 0)) {
 		return -2;
 	}
 

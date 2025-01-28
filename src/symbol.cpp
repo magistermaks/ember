@@ -42,11 +42,6 @@ void Symbol::resolve(const std::string& store) {
 	std::filesystem::path path {this->file};
 	std::filesystem::path parent {store};
 
-	for (int i : prefix) {
-		std::cout << i << "\n";
-
-	}
-
 	this->data.insert(data.end(), prefix.begin(), prefix.end());
 	loadBytes(this->data, getInputFile(parent / path), 0, limit, -1);
 	this->data.insert(data.end(), suffix.begin(), suffix.end());
