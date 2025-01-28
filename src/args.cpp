@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <iostream>
 
 /*
  * Args::StringFlag
@@ -38,6 +39,78 @@ Symbol& Args::getCurrentSymbol() {
 	}
 
 	return symbols.back();
+}
+
+std::vector<uint8_t> Args::parseAsArray(const std::string& list) {
+	std::vector<uint8_t> array;
+	std::string token;
+
+	int minor = 0; // char
+	int major = 0; // string
+
+	auto submit = [&] () {
+		if (!token.empty()) {
+			array.push_back(parseAsNumber(token));
+		}
+	};
+
+	for (char chr : list) {
+		if (major == 1) {
+			if (chr == '"') {
+				major = 0;
+				continue;
+			}
+
+			array.push_back(chr);
+			continue;
+		}
+
+		if (minor == 2) {
+			if (chr != '\'') {
+				raiseError("Expected single quotation (') in affix \"" + list + "\"");
+			}
+
+			minor = 0;
+			continue;
+		}
+
+		if (minor == 1) {
+			array.push_back(chr);
+			minor = 2;
+			continue;
+		}
+
+		if (chr == ',') {
+			submit();
+			token = "";
+			continue;
+		}
+
+		if (chr == '\'') {
+			submit();
+			minor = 1;
+			continue;
+		}
+
+		if (chr == '"') {
+			submit();
+			major = 1;
+			continue;
+		}
+
+		token += chr;
+	}
+
+	if (major != 0) {
+		raiseError("Expected quotation mark (\") but end of argument \"" + list + "\" was reached");
+	}
+
+	if (minor != 0) {
+		raiseError("Expected single quotation (') but end of argument \"" + list + "\" was reached");
+	}
+
+	submit();
+	return array;
 }
 
 int64_t Args::parseAsNumber(const std::string& number) {
@@ -136,6 +209,16 @@ void Args::nextSymbolFlag(const std::string& flg) {
 		return;
 	}
 
+	if (flg == "-b" || flg == "--prefix") {
+		this->expect = InputFlag::SYMBOL_PREFIX;
+		return;
+	}
+
+	if (flg == "-e" || flg == "--suffix") {
+		this->expect = InputFlag::SYMBOL_SUFFIX;
+		return;
+	}
+
 }
 
 void Args::raiseError(const std::string& message) {
@@ -168,6 +251,8 @@ bool Args::accept(InputFlag flag) {
 }
 
 void Args::parseArgument(const char* arg) {
+
+	std::cout << "Parsing argument: " << arg << "\n";
 
 	if (accept(InputFlag::ELF_64_PATH)) {
 		elf64.setValue(arg);
@@ -204,6 +289,16 @@ void Args::parseArgument(const char* arg) {
 		return;
 	}
 
+	if (accept(InputFlag::SYMBOL_PREFIX)) {
+		getCurrentSymbol().prefix = parseAsArray(arg);
+		return;
+	}
+
+	if (accept(InputFlag::SYMBOL_SUFFIX)) {
+		getCurrentSymbol().suffix = parseAsArray(arg);
+		return;
+	}
+
 	if (arg[0] == '-') {
 
 		// starts with '--'
@@ -234,7 +329,7 @@ Args Args::load(int argc, char** argv) {
 	}
 
 	if (args.help) {
-		printf("Usage: ember [options] [-f|--file <path> [-n|--name <name>] [-l|--limit <size>]]...\n");
+		printf("Usage: ember [option flags] [-f|--file <path> [symbol flags]]...\n");
 		printf("Create linkable resource files\n\n");
 
 		printf("Valid option flags:\n");
@@ -253,6 +348,8 @@ Args Args::load(int argc, char** argv) {
 		printf("Valid symbol flags:\n");
 		printf("  -n, --name    <name>  Valid C identifier of the symbol\n");
 		printf("  -l, --limit   <size>  Limit the number of bytes read from file\n");
+		printf("  -b, --prefix  <byte>, List of bytes to prepend\n");
+		printf("  -e, --suffix  <byte>, List of bytes to append\n");
 		exit(0);
 	}
 

@@ -24,6 +24,8 @@ class Args {
 			SYMBOL_FILE,
 			SYMBOL_NAME,
 			SYMBOL_LIMIT,
+			SYMBOL_PREFIX,
+			SYMBOL_SUFFIX,
 		};
 
 		struct StringFlag {
@@ -38,6 +40,7 @@ class Args {
 		void beginSymbolDefinition();
 		Symbol& getCurrentSymbol();
 
+		std::vector<uint8_t> parseAsArray(const std::string& list);
 		int64_t parseAsNumber(const std::string& number);
 		void nextOptionFlag(const std::string& flg);
 		void nextSymbolFlag(const std::string& flg);

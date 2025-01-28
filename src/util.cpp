@@ -24,10 +24,8 @@ std::ofstream getOutputFile(const std::filesystem::path& path) {
 	return output;
 }
 
-std::vector<uint8_t> getBytes(std::ifstream file, uint64_t start, uint64_t limit, uint64_t end) {
-
+void loadBytes(std::vector<uint8_t>& content, std::ifstream file, uint64_t start, uint64_t limit, uint64_t end) {
 	uint64_t offset = 0;
-	std::vector<uint8_t> content;
 
 	// real limit cap
 	uint64_t dist = end - start;
@@ -50,6 +48,4 @@ std::vector<uint8_t> getBytes(std::ifstream file, uint64_t start, uint64_t limit
 		content.push_back(b);
 		offset ++;
 	}
-
-	return content;
 }

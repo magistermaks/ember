@@ -13,6 +13,9 @@ struct Symbol {
 		std::string file;
 		std::string name;
 
+		std::vector<uint8_t> prefix;
+		std::vector<uint8_t> suffix;
+
 		uint64_t limit = -1;
 
 		void print();
